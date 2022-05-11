@@ -1,10 +1,13 @@
-# Veille-Programme
+# Sleeprog
 Petit projet Node.JS et NodeWebkit pour application de bureau.
 
 # Objectif
 - Prendre en main Node.JS a travers un petit projet simple
 - Utiliser la librairie NW pour créer une application de bureau natif
 - Programmer une mise en veille d'un ordinateur via un minuteur
+
+# Telechargement
+Version win32 et win64 : [Télécharger](https://mega.nz/folder/jJsTESJD#CDX5HGpQRMq8PxGUfWv3Wg)
 
 # Capture
 
