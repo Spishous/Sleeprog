@@ -1,0 +1,28 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "window": {
+    "icon": "assets/src/logo.png",
+    "toolbar": true,
+    "frame": false,
+    "width": 300,
+    "height": 150,
+    "position": "center",
+    "min_width": 400,
+    "min_height": 200
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-cmd": "^5.0.0"
+  }
+}

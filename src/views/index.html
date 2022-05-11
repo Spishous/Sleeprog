@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Minuteur veille</title>
+    <script src="../script/config.js"></script>
+    <style>
+        html{height: 100%}
+        body{color:white;cursor:default;user-select:none;font-family:sans-serif;overflow: hidden;height: 100%;display: flex;background: #2a2a2a;}
+        .column {
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+        }
+
+        .timer {
+            height: 50%;
+            font-size: 37px;
+        }
+
+        .button {
+            display: flex;
+        }
+
+        button#startC {
+            color: white;
+            background: #3f6fde;
+            border: none;
+            padding: 6px;
+            width: 8em;
+            border-radius: 3px;
+            box-shadow: 0 0 4px -2px black;
+            cursor: pointer;
+            transition: background-color .2s;
+        }
+
+        button#startC:hover {
+            background: #4679ee;
+        }
+
+        button#startC:active {
+            background: #364eca;
+        }
+        button#startC[disabled] {
+            background: #6f6f6f;
+            color: #cecece;
+            cursor: not-allowed;
+        }
+        .edit{user-select: none;}
+        .edit[contenteditable="true"]{
+            cursor: text;
+        }
+    </style>
+</head>
+<body>
+<div class="column">
+    <div class="timer">
+        <span id="theu" class="edit" contenteditable="true">00</span>
+        <span id="tmin" class="edit" contenteditable="true">01</span>
+        <span id="tsec" class="edit" contenteditable="true">00</span>
+    </div>
+    <div class="button"><button id="startC">Start</button></div>
+</div>
+
+<script>
+    $$('.edit').forEach(elment => {
+        elment.addEventListener('keypress',function(e){
+            let s=e.key;
+            const regex = /[0-9]/g;
+            e.preventDefault();
+            if(s.match(regex)!=null){
+                let t=this;
+                let it=t.innerText+s;
+                while(parseInt(it)>59){
+                    it=it.slice(1);
+                }
+                t.innerText=("0"+it).slice(-2);
+                placeCaretAtEnd(t);
+                timeIsZero();
+            }
+        })
+        elment.addEventListener('paste',function(e){
+            e.preventDefault();
+        })
+    })
+
+    $('#startC').addEventListener('click',function(){
+        startChrono();
+    })
+    var chron;
+    function timeIsZero(){
+        let h=parseInt($('#theu').innerText),
+        m=parseInt($('#tmin').innerText),
+        s=parseInt($('#tsec').innerText);
+        if(h+m+s===0){
+            $('#startC').setAttribute("disabled","");
+        }else{
+            $('#startC').removeAttribute("disabled")
+        }
+
+
+    }
+    function stopChrono(){
+        clearInterval(chron);
+        chron=undefined;
+        $$('.edit').forEach(elment => {
+            elment.setAttribute('contenteditable',true);
+        })
+        $('#startC').innerText="Start";
+    }
+    function startChrono(){
+        if(chron=== undefined){
+            $$('.edit').forEach(elment => {
+                elment.setAttribute('contenteditable',false);
+            })
+            $('#startC').innerText="Stop";
+            timePass();
+            chron=setInterval(function(){
+                timePass();
+            },1000)
+        }else{
+            stopChrono();
+        }
+
+    }
+    function execEnd(){
+        cmd.run('shutdown -h');
+        setTimeout(()=>{
+            win.close();
+        },300);
+    }
+    function timePass(){
+        h=parseInt($('#theu').innerText);
+        m=parseInt($('#tmin').innerText);
+        s=parseInt($('#tsec').innerText)-1;
+        if(h<=0&m<=0&s<=0){
+            stopChrono();
+            execEnd();
+        }
+        if(s===-1) {
+            m--;
+            s=59;
+        }
+        if(m===-1) {
+            h--;
+            m=59;
+        }
+        $('#theu').innerText=("0"+h).slice(-2);
+        $('#tmin').innerText=("0"+m).slice(-2);
+        $('#tsec').innerText=("0"+s).slice(-2);
+        if(h<=0&m<=0&s<=0){
+            stopChrono();
+            timeIsZero();
+            execEnd();
+        }
+    }
+    function selectElementContents(el) {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+    function placeCaretAtEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
+    }
+
+    if(!localStorage.getItem("a")){
+        localStorage.setItem("a",Date.now());
+    }else{
+        $('aside div').innerText=localStorage.getItem("a");
+    }
+</script>
+</body>
+</html>

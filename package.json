@@ -1,0 +1,17 @@
+{
+  "name": "testapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nw src/",
+    "prod": "nwbuild --platforms win32,win64,osx64 --buildDir dist/ src/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nw": "^0.63.0",
+    "nw-builder": "^3.5.7"
+  }
+}
